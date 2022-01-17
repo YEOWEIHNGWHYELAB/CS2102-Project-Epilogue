@@ -1,0 +1,78 @@
+SET datestyle TO DMY;
+
+/*leave_meetings*/
+SELECT * FROM attends;
+CALL leave_meeting (1, 1, '11/11/2021', 12, 13, 11);
+SELECT * FROM attends;
+
+/*approve_meetings*/
+SELECT * FROM meetings;
+CALL approve_meeting (1, 2,'11/11/2021', 12, 13, 22);
+SELECT * FROM meetings;
+CALL leave_meeting (1, 2, '11/11/2021', 12, 13, 12);
+CALL book_room(1, 1, '11/11/2021', 15, 20, 21);
+CALL approve_meeting (1, 1,'11/11/2021', 15, 20, 21);
+SELECT * FROM meetings;
+
+/*non_compliance*/
+SELECT * FROM health_declarations;
+CALL declare_health (1, '12/11/2021', 36.0); 
+CALL declare_health (2, '12/11/2021', 40.0); 
+SELECT * FROM health_declarations;
+SELECT * FROM non_compliance('01/11/2021', '30/11/2021');
+
+/*view_future_meeting*/
+CALL book_room(1, 1, '13/11/2021', 15, 20, 21);
+CALL join_meeting(1, 1, '13/11/2021', 15, 20, 11);
+CALL approve_meeting (1, 1,'13/11/2021', 15, 20, 21);
+SELECT * FROM view_future_meeting('11/11/2021', 11);
+
+/*view_manager_report*/
+CALL book_room(1, 1, '15/11/2021', 15, 20, 21);
+SELECT * FROM view_manager_report('11/11/2021', 13);
+SELECT * FROM view_manager_report('11/11/2021', 21);
+SELECT * FROM meetings;
+SELECT * 
+FROM meeting_rooms
+WHERE floor_no = 1 AND room_no = 1;
+SELECT * FROM employees
+WHERE id = 21;
+
+/*view_booking_report*/
+SELECT * FROM view_booking_report('11/11/2021', 21);
+SELECT * FROM meetings;
+
+/*contact_tracing*/
+CALL book_room(1, 1, '11/11/2021', 15, 16, 11);
+CALL book_room(1, 2, '11/11/2021', 15, 16, 11);
+CALL join_meeting(1, 1, '11/11/2021', 15, 16, 1);
+CALL join_meeting(1, 2, '11/11/2021', 15, 16, 1);
+CALL join_meeting(1, 1, '11/11/2021', 15, 16, 2);
+CALL join_meeting(1, 2, '11/11/2021', 15, 16, 2);
+CALL approve_meeting(1, 1,'11/11/2021', 15, 16, 21);
+CALL approve_meeting(1, 2,'11/11/2021', 15, 16, 22);
+
+CALL declare_health(1, '03/11/2021', 40.0); 
+SELECT * FROM contact_tracing(1, '03/11/2021');
+CALL declare_health(1, '07/11/2021', 40.0); 
+CALL declare_health(1, '08/11/2021', 40.0); 
+SELECT * FROM contact_tracing(1, '08/11/2021'); 
+CALL declare_health(1, '09/11/2021', 36.0); 
+CALL declare_health(1, '10/11/2021', 39.0); 
+CALL book_room(1, 1, '11/11/2021', 15, 16, 11);
+CALL join_meeting(1, 1, '11/11/2021', 15, 16, 1);
+SELECT * FROM contact_tracing(1, '10/11/2021'); 
+CALL declare_health(1, '15/11/2021', 40.0);
+SELECT * FROM contact_tracing(1, '15/11/2021'); 
+
+CALL book_room(1, 1, '17/11/2021', 15, 16, 11);
+CALL join_meeting(1, 1, '17/11/2021', 15, 16, 1);
+CALL approve_meeting(1, 1,'17/11/2021', 15, 16, 21);
+CALL declare_health(1, '19/11/2021', 40.0); 
+SELECT * FROM contact_tracing(1, '19/11/2021'); 
+
+CALL book_room(1, 1, '17/12/2022', 15, 16, 11);
+CALL join_meeting(1, 1, '17/12/2022', 15, 16, 1);
+CALL declare_health(1, '19/12/2022', 40.0); 
+SELECT * FROM contact_tracing(1, '19/12/2022'); 
+

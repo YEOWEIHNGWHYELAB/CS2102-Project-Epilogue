@@ -1,0 +1,14 @@
+1. {did} -> {d_name} 
+2. {eid} -> {e_name, contact_no, resignation_date, e_did, email} 
+3. {email} -> {eid}
+4. {eid, d_date} -> {temperature}
+5. {floor_no, room_no} -> {r_name, r_did}
+6. {floor_no, room_no, starttime, mdate} -> {booker_eid, approver_eid}
+7. {booker_eid} -> {eid}
+8. {approver_eid} -> {eid}
+9. {attendee_eid, starttime, mdate} -> {floor_no, room_no}
+10. {floor_no, room_no, udate} -> {update_eid, capacity}
+11. {update_eid} -> {eid}
+12. {attendee_eid} -> {eid}
+13. {e_did} -> {did}
+14. {r_did} -> {did}

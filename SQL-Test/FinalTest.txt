@@ -1,0 +1,129 @@
+SELECT * FROM updates;
+SELECT * FROM meetings;
+SELECT * FROM meeting_rooms;
+SELECT * FROM employees;
+SELECT * FROM health_declarations;
+
+/*Basic*/ (Passed)
+/*1.*/
+CALL add_department(IN did INT, IN d_name VARCHAR(50))
+CALL add_department(50, '2102 department');
+
+/*2.*/ (Passed)
+CALL remove_department(IN d_id INT)
+CALL remove_department(50);
+CALL remove_department(1);
+
+/*3.*/ (Passed)
+CALL add_room (IN floor_number INT, IN room_number INT, IN room_name VARCHAR(50), IN department_id INT, IN capacity INT, IN manager_id INT)
+CALL add_room (1, 30, 'adi best', 1, 100, 1);
+CALL add_room (1, 30, 'adi best', 1, 100, 11);
+CALL add_room (1, 30, 'adi best', 1, 100, 21);
+CALL add_room (2, 30, 'adi best', 2, 100, 21);
+
+/*4.*/ (Passed)
+CALL change_capacity(IN floor_number INT, IN room_number INT, IN new_capacity INT, IN date DATE, IN manager_id INT) 
+CALL change_capacity(1, 1, 100, '07/11/2021', 21); 
+CALL change_capacity(1, 1, 100, '10/11/2021', 21); 
+CALL change_capacity(1, 1, 100, '07/11/2021', 22); 
+CALL change_capacity(1, 1, 100, '07/11/2021', 1); 
+CALL change_capacity(1, 1, 100, '07/12/2021', 21); 
+
+/*5.*/ (Passed)
+CALL add_employee(IN employee_name VARCHAR(50), IN contact_number VARCHAR(20), IN kind VARCHAR(10), IN department_id INT) 
+CALL add_employee('Adi', '123', 'seniors', 1); 
+CALL add_employee('Yoga', '123', 'managers', 1); 
+CALL add_employee('Yoga', '123', 'juniors', 1); 
+CALL add_employee('Yoga', '123', 'managers', 1); 
+
+/*6.*/ (Passed)
+CALL remove_employee(IN employee_id INT, IN new_resignation_date DATE) 
+CALL remove_employee(31, '07/12/2021'); 
+CALL remove_employee(31, '09/12/2021'); 
+CALL remove_employee(31, '10/12/2021'); 
+
+/*Core*/
+/*1.*/
+SELECT * FROM search_room(cap INT, search_date DATE, start_hour INT, end_hour INT)
+SELECT * FROM search_room(10, '10/11/2021', 0, 23);
+
+/*2.*/
+CALL book_room (floor_number INT, room_number INT, book_date DATE, start_hour INT, end_hour INT, emp_id INT)
+CALL book_room(1, 1, '03/11/2021', 15, 16, 11);
+CALL book_room(1, 1, '20/11/2021', 15, 16, 21);
+
+/*3.*/
+CALL unbook_room (floor_number INT, room_number INT, book_date DATE, start_hour INT, end_hour INT, emp_id INT)
+CALL book_room(1, 1, '09/11/2022', 16, 19, 11);
+CALL join_meeting(1, 1, '09/11/2022', 16, 19, 1);
+CALL approve_meeting(1, 2,'09/11/2022', 16, 19, 22);
+CALL unbook_room(1, 1, '09/11/2022', 16, 19, 11);
+
+/*4.*/
+CALL join_meeting (IN floor_number INT , IN room_number INT, IN date DATE, IN start_hour INT, IN end_hour INT, IN employee_id INT) AS
+
+/*5.*/
+CALL leave_meeting (IN floor_number INT , IN room_number INT, IN date DATE, IN start_hour INT, IN end_hour INT, IN employee_id INT) AS
+
+/*6.*/
+CALL approve_meeting (IN floor_number INT, IN room_number INT, IN m_date DATE, IN start_time INT, IN end_time INT, IN manager_id INT)
+CALL approve_meeting(1,2,'11/11/2021', 12, 13, 21);
+CALL leave_meeting (1, 1, '11/11/2021', 12, 13, 11);
+
+/*HEALTH*/
+/*1.*/
+CALL declare_health(IN employee_id INT, IN date DATE, IN temperature NUMERIC) 
+CALL declare_health(1, '09/11/2021', 29.0); 
+CALL declare_health(1, '09/11/2021', 45.0); 
+CALL declare_health(1, '09/11/2021', 37.0); 
+
+/*2.*/
+SELECT * FROM contact_tracing(IN employee_id INT, IN date_of_tracing DATE)
+CALL book_room(1, 1, '11/11/2021', 15, 16, 11);
+CALL approve_meeting(1, 1,'09/11/2021', 15, 16, 21);
+CALL approve_meeting(1, 1,'08/11/2021', 12, 13, 21);
+CALL approve_meeting(1, 2,'08/11/2021', 12, 13, 22);
+CALL join_meeting(1, 1, '03/11/2021', 15, 16, 1);
+
+/*employee_id 1 is fever boi*/
+CALL declare_health(1, '03/11/2021', 40.0); 
+SELECT * FROM contact_tracing(1, '03/11/2021');
+CALL declare_health(1, '07/11/2021', 40.0); 
+CALL declare_health(1, '08/11/2021', 40.0); 
+SELECT * FROM contact_tracing(1, '08/11/2021'); 
+CALL declare_health(1, '09/11/2021', 36.0); 
+CALL declare_health(1, '10/11/2021', 39.0); 
+CALL book_room(1, 1, '11/11/2021', 15, 16, 11);
+CALL join_meeting(1, 1, '11/11/2021', 15, 16, 1);
+SELECT * FROM contact_tracing(1, '10/11/2021'); 
+CALL declare_health(1, '15/11/2021', 40.0);
+SELECT * FROM contact_tracing(1, '15/11/2021'); 
+
+CALL book_room(1, 1, '17/11/2021', 15, 16, 11);
+CALL join_meeting(1, 1, '17/11/2021', 15, 16, 1);
+CALL approve_meeting(1, 1,'17/11/2021', 15, 16, 21);
+CALL declare_health(1, '19/11/2021', 40.0); 
+SELECT * FROM contact_tracing(1, '19/11/2021'); 
+
+CALL book_room(1, 1, '17/12/2022', 15, 16, 11);
+CALL join_meeting(1, 1, '17/12/2022', 15, 16, 1);
+CALL declare_health(1, '19/12/2022', 40.0); 
+SELECT * FROM contact_tracing(1, '19/12/2022'); 
+
+/*ADMIN*/
+/*1.*/
+SELECT * FROM non_compliance(IN startdate date, IN enddate date)
+SELECT * FROM non_compliance('01/11/2021', '30/11/2021');
+
+/*2.*/
+SELECT * FROM view_booking_report(IN startdate date, IN eid INT)
+SELECT * FROM view_booking_report('08/11/2021', 13);
+
+/*3.*/
+SELECT * FROM view_future_meeting(IN start_date DATE, IN eid INT)
+SELECT * FROM view_future_meeting('08/11/2021', 13);
+
+/*4.*/
+SELECT * FROM view_manager_report(IN start_date DATE, IN input_eid INT) 
+SELECT * FROM view_manager_report('08/11/2021', 13);
+
